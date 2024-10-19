@@ -14,7 +14,6 @@ import Experience from "./pages/Experience";
 import CreateExperience from "./pages/CreateExperience";
 import EditExperience from "./pages/EditExperience";
 import ExperienceById from "./pages/ExperienceById";
-import ExperienceState from "./pages/ExperienceState";
 import PageNotFound from "./components/PageNotFoundComponent";
 import ChangePassword from "./pages/ChangePassword.jsx";
 import AdminReservationsList from "./pages/AdminReservationsList";
@@ -45,10 +44,6 @@ function App() {
           <Route
             path="/experiencias/:experienceId"
             element={<ExperienceById />}
-          />
-          <Route
-            path="/experiencias/:experienceId/experienceState"
-            element={<ExperienceState />}
           />
           <Route path="/experiencias/create" element={<CreateExperience />} />
           <Route
