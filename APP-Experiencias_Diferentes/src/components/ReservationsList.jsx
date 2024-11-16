@@ -9,8 +9,6 @@ import ExperienceFilter from "./ExperienceFilter";
 import CancellationExperienceComponent from "./CancellationExperienceComponent";
 
 const ReservationsList = () => {
-  const { VITE_API_URL } = import.meta.env;
-
   const { token, userLogged } = useContext(AuthContext);
 
   const [filteredExperiences, setFilteredExperiences] = useState([]);
@@ -126,7 +124,7 @@ const ReservationsList = () => {
                   className="rounded-3xl h-full object-cover"
                   src={
                     ReservedExp.image
-                      ? `${VITE_API_URL}/uploads/${ReservedExp.image}`
+                      ? `${ReservedExp.image}`
                       : "The experience does not contain images"
                   }
                   alt={ReservedExp.title}

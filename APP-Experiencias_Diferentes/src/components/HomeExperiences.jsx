@@ -7,8 +7,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const HomeExperiences = () => {
-  const { VITE_API_URL } = import.meta.env;
-
   const [experiences, setExperiences] = useState(null);
   const [search, setSearch] = useState("");
   const [order, setOrder] = useState("");
@@ -65,7 +63,7 @@ const HomeExperiences = () => {
                   className="rounded-3xl h-full object-cover"
                   src={
                     experience.image
-                      ? `${VITE_API_URL}/uploads/${experience.image}`
+                      ? `${experience.image}`
                       : "The experience does not contain images"
                   }
                   alt={experience.title}
