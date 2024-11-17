@@ -2,45 +2,33 @@ import fs from "fs/promises";
 import path from "path";
 import sharp from "sharp";
 import { v4 as uuidv4 } from "uuid";
-
-import { UPLOADS_DIR } from "../server.js";
+import { v2 as cloudinary } from "cloudinary";
 import { deleteImageError, saveImageError } from "../services/errorService.js";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export const savePhotoUtils = async (img, width) => {
   try {
-    // si no existe la carpeta uploads, la creamos, sino accedemos
-    try {
-      //intento acceder a la carpeta
-      await fs.access(UPLOADS_DIR);
-    } catch {
-      // si no pudo acceder es porque no existe, entonces creala
-      await fs.mkdir(UPLOADS_DIR);
-    }
-
-    // tengo que procesar la imagen porque viene en un buffer
-    // creo un objeto de tipo sharp
-    const sharpImg = sharp(img.data);
-
-    // configuro el ancho que quiero que tenga la foto
-    sharpImg.resize(width);
-
-    // configuro el nombre que va a tener la imagen
-    const imgName = `${uuidv4()}.jpg`;
-
-    // configuro el path del lugar donde voy a guardar la imagen
-    const pathImg = path.join(UPLOADS_DIR, imgName);
-
-    // guardo el archivo en el disco
-    await sharpImg.toFile(pathImg);
-
-    return imgName;
+    const uploadResult = await cloudinary.uploader
+      .upload(`data:${img.mimetype};base64,${img.data.toString("base64")}`, {
+        folder: "uploads",
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    console.log("uploadResult", uploadResult);
+    return uploadResult.secure_url;
   } catch (error) {
     console.error(error);
     saveImageError();
   }
 };
 
-export const deletePhotoUtils = async (imgName) => {
+/*export const deletePhotoUtils = async (imgName) => {
   try {
     //especifica la ruta en donde está guardado el archivo y el nombre del archivo a guardar
     const imgPath = path.join(UPLOADS_DIR, imgName);
@@ -59,6 +47,30 @@ export const deletePhotoUtils = async (imgName) => {
     console.error(error);
     deleteImageError();
   }
+};*/
+
+export const deletePhotoUtils = async (imgName) => {
+  const parts = imgName.split("/");
+
+  // Eliminar el prefijo de la URL hasta '/upload/'
+  const uploadIndex = parts.indexOf("upload");
+  if (uploadIndex === -1) {
+    throw new Error('URL no válida: no contiene "/upload/"');
+  }
+
+  // Tomar las partes después de 'upload' y antes de la extensión
+  const publicIdWithExtension = parts.slice(uploadIndex + 1).join("/");
+
+  // Remover la extensión (.jpg, .png, etc.)
+  const publicId = publicIdWithExtension.replace(/\.[^/.]+$/, "");
+
+  cloudinary.api.resources({ type: "upload" }, (error, result) => {
+    if (error) {
+      console.error("Error:", error);
+    } else {
+      console.log("Imágenes:", result.resources);
+    }
+  });
 };
 
 export const duplicatePhotoUtils = async (imgName) => {

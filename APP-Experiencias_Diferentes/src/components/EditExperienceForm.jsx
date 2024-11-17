@@ -9,7 +9,6 @@ import getExperienceService from "../services/getExperienceService"; // Suponien
 
 const EditExperienceForm = () => {
   const { experienceId } = useParams();
-  const { VITE_API_URL } = import.meta.env;
 
   // Estado para los datos del formulario
   const [formData, setFormData] = useState({
@@ -100,7 +99,7 @@ const EditExperienceForm = () => {
 
   // Manejar cambios en los campos del formulario
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
@@ -210,7 +209,7 @@ const EditExperienceForm = () => {
               {formData.oldImage && (
                 <img
                   className="rounded-3xl my-2"
-                  src={`${VITE_API_URL}/uploads/${formData.oldImage}`}
+                  src={`${formData.oldImage}`}
                   alt="Current image"
                   width="500"
                 />

@@ -9,7 +9,6 @@ const AdminExperiencesList = () => {
   const { token, userLogged } = useContext(AuthContext);
   const [experiences, setExperiences] = useState([]);
   const [filteredExperiences, setFilteredExperiences] = useState([]);
-  const { VITE_API_URL } = import.meta.env;
   const [search, setSearch] = useState("");
   const [order, setOrder] = useState("");
   const [direction, setDirection] = useState("");
@@ -105,7 +104,7 @@ const AdminExperiencesList = () => {
                 className="rounded-3xl h-full object-cover"
                 src={
                   experience.image
-                    ? `${VITE_API_URL}/uploads/${experience.image}`
+                    ? `${experience.image}`
                     : "The experience does not contain images"
                 }
                 alt={experience.title}

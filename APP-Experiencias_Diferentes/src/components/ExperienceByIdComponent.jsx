@@ -10,7 +10,6 @@ import DuplicateExperienceComponent from "./DuplicateExperienceComponent";
 
 const GetExperienceById = () => {
   // Ruta al Back
-  const { VITE_API_URL } = import.meta.env;
 
   // Obtención del token
   const { userLogged, token } = useContext(AuthContext);
@@ -164,7 +163,7 @@ const GetExperienceById = () => {
             className="rounded-3xl"
             src={
               experience.image
-                ? `${VITE_API_URL}/uploads/${experience.image}`
+                ? `${experience.image}`
                 : "The experience does not contain images"
             }
             alt={experience.title}
